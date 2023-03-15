@@ -104,7 +104,7 @@ const App = () => {
       <Button text="bad" handleClick={handleBadClick}/>
 
       <Header text="statistics"/>
-      <Statistics text="statistics" values={feedbackArray()}/>
+      <Statistics values={feedbackArray()}/>
     </div>
   )
 }
