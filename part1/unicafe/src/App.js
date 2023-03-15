@@ -1,24 +1,29 @@
 import { useState } from 'react'
 
 const Header = (props) => {
+  const { text } = props
   return (
     <div>
-        <h1>{props.text}</h1>
+        <h1>{text}</h1>
     </div>
   )
 }
 
-const Button = (props) => (
-  <button onClick={props.handleClick}>
-    {props.text}
-  </button>
-)
+const Button = (props) => {
+  const { text, handleClick } = props
+  return(
+    <button onClick={handleClick}>
+      {text}
+    </button>
+  )
+}
 
 const StatisticLine = (props) => {
+  const { text, value } = props
   return(
     <tr>
-      <td>{props.text}</td>
-      <td>{props.value}</td>
+      <td>{text}</td>
+      <td>{value}</td>
     </tr>
   )
 }
