@@ -30,7 +30,7 @@ const StatisticLine = (props) => {
 
 const Statistics = (props) => {
   const {good, bad, neutral, total, avg, positive} = props.values
-  if(total == 0) {
+  if(total === 0) {
     return(
       <div>
         No feedback given
