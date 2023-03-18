@@ -6,6 +6,25 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import PhoneBook from './components/PhoneBook'
 
+
+import './index.css'
+
+const Notification = ({message}) => {
+
+  if(message.message == null) 
+    return null
+  
+  const notificationStyle = {
+    color: message.color
+  }
+  
+  return (
+      <div className='notification' style={notificationStyle}>
+        {message.message}
+      </div>
+    )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([])
   
@@ -14,11 +33,24 @@ const App = () => {
 
   const [searchName, setSearchName] = useState('')
 
+  const [notificationMessage, setNotificationMessage] = useState({
+     message: null, color : null
+  })
+
   useEffect(() => {
     personsService
       .getAll()
       .then(initialPersons => setPersons(initialPersons))
   }, [])
+
+  const showNotificationMessage = (message, color) => {
+    setNotificationMessage(
+      {message, color}
+    ) 
+    setTimeout(()=> {
+      setNotificationMessage({...notificationMessage, message: null})
+    }, 5000)
+  }
 
   const addName = (e) => {
     e.preventDefault()
@@ -34,6 +66,11 @@ const App = () => {
             setPersons(persons.map(p => p.id !== oldPerson.id ? p : returnedPerson ))
             setNewName('')
             setNewPhone('')
+            showNotificationMessage(`Modified ${returnedPerson.name}`, 'green')
+          })
+          .catch(() => {
+            showNotificationMessage(`Information of ${oldPerson.name} has already been removed from the server.`, 'red')
+            setPersons(persons.filter(p => p.id !== oldPerson.id))
         }) 
       }
 
@@ -46,20 +83,25 @@ const App = () => {
           setPersons(persons.concat(newPerson))
           setNewName('')
           setNewPhone('')
+          showNotificationMessage(`Added ${newPerson.name}`, 'green')
       })
 
     }
   }
 
   const removeName = id => {
-    const oldPerson = persons.find((person) => person.id===id).name
+    const oldPerson = persons.find((person) => person.id===id)
     
-    if(window.confirm(`Delete ${oldPerson}?`)) {
+    if(window.confirm(`Delete ${oldPerson.name}?`)) {
       personsService
         .remove(id)
         .then(() => {
           setPersons(persons.filter(p => p.id !== id))
-      }) 
+        })
+        .catch(() => {
+          showNotificationMessage(`Information of ${oldPerson.name} has already been removed from the server.`, 'red')
+          setPersons(persons.filter(p => p.id !== id))
+      })
     }
   }
 
@@ -81,6 +123,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage} />
       <Filter handleValue={searchName} handleChange={handleSearchChange} />
 
       <h3>add a new</h3>
