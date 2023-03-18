@@ -1,10 +1,10 @@
 const PersonForm = ({handleSubmit, nameEvent, numberEvent}) => 
   <form onSubmit={handleSubmit}>
     <div>
-      name: <input value={nameEvent.handleValue} onChange={nameEvent.handleChange}/>
+      name: <input value={nameEvent.newName} onChange={nameEvent.handleNameChange}/>
     </div>
     <div>
-      number: <input value={numberEvent.handleValue} onChange={numberEvent.handleChange}/>
+      number: <input value={numberEvent.newPhone} onChange={numberEvent.handlePhoneChange}/>
     </div>
     <div>
       <button type="submit">add</button>
