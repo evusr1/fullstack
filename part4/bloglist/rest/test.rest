@@ -11,3 +11,25 @@ Content-Type: application/json
     "url": "http://url.com",
     "likes": 5
 }
+
+###
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "username": "test",
+    "name": "Test man",
+    "password": "password"
+}
+
+###
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "username": "arto",
+    "name": "Arto Hellas",
+    "password": "password"
+}
+###
+GET http://localhost:3003/api/users
