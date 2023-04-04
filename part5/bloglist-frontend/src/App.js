@@ -42,12 +42,13 @@ const App = () => {
       setBlogs( blogs )
     )  
   }, [])
+  
   useEffect(() => {
     const loggeduserJSON = window.localStorage.getItem('loggedBlogsappUser')
     if(loggeduserJSON) {
-      const user = JSON.parse(loggeduserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
+      const userReturned = JSON.parse(loggeduserJSON)
+      setUser(userReturned)
+      blogService.setToken(userReturned.token)
     }
   }, [])
 
@@ -69,7 +70,7 @@ const App = () => {
       })
 
       window.localStorage.setItem(
-        'loggedBlogsappUser', JSON.stringify(user)
+        'loggedBlogsappUser', JSON.stringify(userReturned)
       )
       blogService.setToken(userReturned.token)
       
@@ -94,14 +95,9 @@ const App = () => {
     event.preventDefault()
     try {
 
-      console.log({
-        title, author, url
-      })
-
       const createdBlog = await blogService.create({
         title, author, url
       })
-
 
       setUrl('')
       setAuthor('')
