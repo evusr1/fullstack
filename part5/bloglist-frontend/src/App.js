@@ -32,10 +32,10 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
-  const [info, setInfo] = useState({messsage: null})
+  const [info, setInfo] = useState({ messsage: null })
 
   useEffect(() => {
-    const getBlogs = async () => { 
+    const getBlogs = async () => {
       const returnedBlogs = await blogService.getAll()
       const sortBlogs = returnedBlogs.sort((a, b) => b.likes - a.likes)
 
@@ -43,7 +43,7 @@ const App = () => {
     }
     getBlogs()
   }, [])
-  
+
   useEffect(() => {
     const loggeduserJSON = window.localStorage.getItem('loggedBlogsappUser')
     if(loggeduserJSON) {
@@ -74,7 +74,7 @@ const App = () => {
         'loggedBlogsappUser', JSON.stringify(userReturned)
       )
       blogService.setToken(userReturned.token)
-      
+
       setUser(userReturned)
       setUsername('')
       setPassword('')
@@ -96,11 +96,11 @@ const App = () => {
   const handleCreate = async (newBlog) => {
     try {
       const createdBlog = await blogService.create(newBlog)
-      setBlogs(blogs.concat({ 
+      setBlogs(blogs.concat({
         ...createdBlog,
-        user: { 
+        user: {
           name : user.name,
-          username : user.username 
+          username : user.username
         }
       }))
 
@@ -116,14 +116,16 @@ const App = () => {
   const handleLike = async (oldBlog) => {
     try {
       const updatedBlog = await blogService.update({
-          ...oldBlog,
-          likes: oldBlog.likes + 1,
-          user: oldBlog.user ? oldBlog.user.id : null
+        ...oldBlog,
+        likes: oldBlog.likes + 1,
+        user: oldBlog.user ? oldBlog.user.id : null
       })
-      
-      setBlogs(blogs.map(blog => {
-        return blog.id === updatedBlog.id ? {...updatedBlog, user: blog.user } : blog
-      }))
+
+      setBlogs(blogs
+        .map(blog => {
+          return blog.id === updatedBlog.id ? { ...updatedBlog, user: blog.user } : blog
+        })
+        .sort((a, b) => b.likes - a.likes))
     } catch(exception) {
       if(exception.response.data.error)
         notifyWith(exception.response.data.error, 'error')
@@ -139,11 +141,12 @@ const App = () => {
         }))
       } catch(exception) {
         if(exception.response.data.error)
-          notifyWith(exception.response.data.error, 'error')  
+          notifyWith(exception.response.data.error, 'error')
       }
     }
 
-  } 
+  }
+
   const loginForm = () => (
     <>
       <h2>login to application</h2>
@@ -151,21 +154,21 @@ const App = () => {
       <form onSubmit={ handleLogin }>
         <div>
           username
-            <input
-              type = "text"
-              value = {username}
-              name = "username"
-              onChange = {({ target }) => setUsername(target.value)}
-            />
+          <input
+            type = "text"
+            value = {username}
+            name = "username"
+            onChange = {({ target }) => setUsername(target.value)}
+          />
         </div>
         <div>
           password
-            <input
-              type = "password"
-              value = {password}
-              name = "password"
-              onChange = {({ target }) => setPassword(target.value)}
-            />
+          <input
+            type = "password"
+            value = {password}
+            name = "password"
+            onChange = {({ target }) => setPassword(target.value)}
+          />
         </div>
         <div>
           <button type="submit">login</button>
@@ -196,7 +199,7 @@ const App = () => {
 
   return (
     <div>
-      { user==null && loginForm() }
+      { user===null && loginForm() }
       { user !== null && blogsList() }
     </div>
   )
