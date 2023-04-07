@@ -34,7 +34,7 @@ const Blog = ({
         {blog.title} {blog.author}
         <button onClick={toggleVisibility}>{showButtonLabel}</button>
       </div>
-      <div style={showWhenVisible}>
+      <div style={showWhenVisible} className='togglableContent'>
         {blog.url} <br/>
         {blog.likes} <button onClick={() => handleLike(blog)} >like</button> <br/>
         {user} <br/>
