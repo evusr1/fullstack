@@ -19,7 +19,7 @@ const Notification = ({ info }) => {
     marginBottom: 10
   }
   return (
-    <div style={style}>
+    <div className="error" style={style}>
       {info.message}
     </div>
   )
@@ -157,7 +157,7 @@ const App = () => {
           <input
             type = "text"
             value = {username}
-            name = "username"
+            id = "username"
             onChange = {({ target }) => setUsername(target.value)}
           />
         </div>
@@ -166,12 +166,12 @@ const App = () => {
           <input
             type = "password"
             value = {password}
-            name = "password"
+            id = "password"
             onChange = {({ target }) => setPassword(target.value)}
           />
         </div>
         <div>
-          <button type="submit">login</button>
+          <button type="submit" id="login-button" >login</button>
         </div>
       </form>
     </>

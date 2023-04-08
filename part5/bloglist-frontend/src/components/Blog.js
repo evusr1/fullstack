@@ -29,7 +29,7 @@ const Blog = ({
   const user = blog.user ? blog.user.name : 'unknown'
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className="blog">
       <div>
         {blog.title} {blog.author}
         <button onClick={toggleVisibility}>{showButtonLabel}</button>
