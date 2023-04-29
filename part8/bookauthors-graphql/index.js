@@ -98,8 +98,7 @@ const resolvers = {
         query.author =  author._id
       }
       
-      if(args.genre)
-        query.genres = [args.genre]
+      query.genres = args.genre
 
         return Book.find(query)
           .populate('author')
@@ -155,7 +154,7 @@ const resolvers = {
         })          
       }
 
-      return newBook
+      return newBook.populate('author')
     },
     editAuthor: async (root, args, { currentUser }) => {
       if ( !currentUser )

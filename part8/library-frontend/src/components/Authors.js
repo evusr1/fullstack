@@ -21,6 +21,7 @@ const Authors = (props) => {
 
   const handleEdit = (e) => {
     e.preventDefault();
+    console.log('edit author', name)
     editAuthor({variables: {name, setBornTo: Number(born)}});
     setBorn(0);
     setName('');
@@ -45,15 +46,19 @@ const Authors = (props) => {
           ))}
         </tbody>
       </table>
-      <form onSubmit={handleEdit}>
-        name<select onChange={({target})=>setName(target.value)}>
-          {authors.map((a) => (
-            <option value={a.name} key={a.name}> {a.name}</option>
-          ))}
-        </select><br/>
-        born<input type="number" onChange={({target})=>setBorn(target.value)}/><br/>
-        <button>update author</button>
-      </form>
+      
+      { props.show === 'token' ? (
+        <form onSubmit={handleEdit}>
+          name<select onChange={({target})=>setName(target.value)} value={name}>
+          <option value=''></option>
+            {authors.map((a) => (
+              <option value={a.name} key={a.name}> {a.name}</option>
+            ))}
+          </select><br/>
+          born<input type="number" onChange={({target})=>setBorn(target.value)} value={born}/><br/>
+          <button type="submit">update author</button>
+        </form>
+      ) : null }
     </div>
   )
 }
