@@ -1,21 +1,29 @@
 import { useEffect, useState } from "react"
 import { useMutation } from "@apollo/client"
+import { useApolloClient } from '@apollo/client'
 
-import { LOGIN_USER } from "../queries"
+import { LOGIN_USER, ME } from "../queries"
 
-const LoginForm = ({setToken, show}) => {
+const LoginForm = ({setToken, show, setPage}) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
-  const [login, result] = useMutation(LOGIN_USER)
+  const [login, result] = useMutation(LOGIN_USER, {
+    refetchQueries: [ { query: ME } ]
+  })
 
+  const client = useApolloClient()
+  
   useEffect(() => {
     if(result.data) {
       const token = result.data.login.value
       setToken(token)
       localStorage.setItem('library-app-token', token)
+      client.resetStore().then(() => {
+        setPage('books')
+      })
     }
-  }, [result.data, setToken])
+  }, [result.data, setToken, setPage, client])
 
   if (!show) {
     return null

@@ -14,7 +14,7 @@ const Recommended = (props) => {
     return <div>loading favorite genre...</div>
   }
   
-  const genre = result.data.me.favoriteGenre
+  const genre = result.data.me ? result.data.me.favoriteGenre : null
 
   return (
     <div>

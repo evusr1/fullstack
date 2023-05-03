@@ -3,10 +3,30 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
-import { useApolloClient } from '@apollo/client'
+import { useApolloClient, useSubscription } from '@apollo/client'
+
+import { ALL_BOOKS, BOOK_ADDED } from './queries'
+
 import Recommended from './components/Recommended'
 
-
+export const updateCacheMultipleQueries = (cache, queries, addedBook) => {
+  const uniqByTitle = (a) => {
+      let seen = new Set()
+      return a.filter((item) => {
+        let k = item.title
+        return seen.has(k) ? false : seen.add(k)
+      })
+  }
+  queries.forEach((query) => 
+    cache.updateQuery(query, ( data ) => {
+      if(data && data.allBooks) {
+        return {
+          allBooks: uniqByTitle(data.allBooks.concat(addedBook))
+        }
+      }
+    })
+  )
+}
 
 const App = () => {
   const client = useApolloClient()
@@ -19,6 +39,29 @@ const App = () => {
     if(token)
       setToken(token)
   }, [])
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      const addedBook = data.data.bookAdded
+      window.alert(`${addedBook.title} added`)
+
+      const queries = addedBook.genres.map((genre) => {
+        return { query: ALL_BOOKS, variables: { genre } }
+      })
+
+      updateCacheMultipleQueries(client.cache, 
+        [
+          { query: ALL_BOOKS,
+            variables: {
+              genre: null,
+            },
+          },
+          ...queries
+        ],
+        addedBook,
+      )
+    }
+  })
 
   const logout = () => {
     setToken(null)
@@ -49,10 +92,10 @@ const App = () => {
       <Books show={page === 'books'} />
 
       <NewBook show={ page === 'add'} />
-      
-      <Recommended show={ page === 'recommended'} />
 
-      <LoginForm show={page === 'login'} setToken={setToken} />
+      <LoginForm show={!token && page === 'login'} setToken={setToken} setPage={setPage} />
+
+      <Recommended show={ page === 'recommended'} />
     </div>
   )
 }
