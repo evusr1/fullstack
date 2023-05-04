@@ -1,0 +1,17 @@
+{
+  "name": "tscript9_1-7",
+  "version": "0.0.1",
+  "description": "exercises 9.1 - 9.7",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "ts-node": "ts-node",
+    "calculateBmi": "ts-node bmiCalculator.ts",
+    "calculateExercises": "ts-node exerciseCalculator.ts"
+  },
+  "author": "evusr1",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.16.3"
+  }
+}
