@@ -8,7 +8,7 @@ const parseArgumentsBmi = (args: string[]): BmiValues => {
   if (args.length > 4) throw new Error('Too many arguments');
 
   return(validateBMI(args[2], args[3]));
-}
+};
 
 export const validateBMI = (height: string, weight: string) => {
   if (!isNaN(Number(height)) && !isNaN(Number(weight))) {
@@ -19,7 +19,7 @@ export const validateBMI = (height: string, weight: string) => {
   } else {
     throw new Error('Provided values were not numbers!');
   }
-}
+};
 
 export const calculateBmi = (height: number, weight: number) => {
   const bmi: number = weight / ((height / 100) * (height / 100));
@@ -40,7 +40,7 @@ export const calculateBmi = (height: number, weight: number) => {
     return 'Obese (Class II)';
 
   return 'Obese (Class III)';
-}
+};
 
 //not sure if I'm supposed to remove this
 try {
