@@ -16,7 +16,7 @@ const AddPatientModal = ({ modalOpen, onClose, onSubmit, error }: Props) => (
     <Divider />
     <DialogContent>
       {error && <Alert severity="error">{error}</Alert>}
-      <AddPatientForm onSubmit={onSubmit} onCancel={onClose}/>
+      <AddPatientForm onSubmit={onSubmit} onCancel={onClose} />
     </DialogContent>
   </Dialog>
 );
