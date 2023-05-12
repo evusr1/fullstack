@@ -20,7 +20,7 @@ const OccupationalHealthcareEntry = ({entry, handleDiagnosis}:Props) => {
             </Icon>
             {entry.employerName}<br/>
             {entry.description}<br/>
-            {entry.sickLeave && <>{entry.sickLeave.startDate} - {entry.sickLeave.endDate}<br/></>}
+            {entry.sickLeave && <>Sick Leave: {entry.sickLeave.startDate} - {entry.sickLeave.endDate}<br/></>}
             <ul>
                 {entry.diagnosisCodes && entry.diagnosisCodes.map((code) => (
                 <li key={code}>{code} {handleDiagnosis(code)}</li>

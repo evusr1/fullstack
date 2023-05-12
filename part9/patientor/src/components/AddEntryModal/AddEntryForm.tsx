@@ -1,6 +1,6 @@
 
 import { SyntheticEvent, useState } from "react";
-import { Diagnosis, EntryFormValues, EntryType, HealthCheckRating } from "../../types";
+import { Diagnosis, EntryFormValues, EntryType, HealthCheckRating, DiagnosesEntry } from "../../types";
 import { Button, Grid, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
 
 import AddIcon from '@mui/icons-material/Add';
@@ -20,8 +20,8 @@ const AddEntryForm = ({onCancel, onSubmit, diagnoses}: Props) => {
     const [date, setDate] = useState('');
     const [specialist, setSpecialist] = useState('');
     const [type, setType] = useState<EntryType>(EntryType.HealthCheck);
-    const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([]);
-    const [diagnosisCode, setDiagnosisCode] = useState<string>();
+    const [diagnosisCodes, setDiagnosisCodes] = useState<Array<DiagnosesEntry['code']>>([]);
+    const [diagnosisCode, setDiagnosisCode] = useState<DiagnosesEntry['code']>(diagnoses[0].code);
 
     const [healthCheckRating, setHealthCheckRating] = useState(HealthCheckRating.Healthy)
 
@@ -175,7 +175,7 @@ const AddEntryForm = ({onCancel, onSubmit, diagnoses}: Props) => {
             fullWidth
             label="Diagnosis to add"
             onChange={({ target }) => setDiagnosisCode(target.value)}
-            value={diagnosisCode ? diagnosisCode : diagnoses[0].code}
+            value={diagnosisCode}
           >
           {diagnoses.map(diagnosis =>
             <MenuItem

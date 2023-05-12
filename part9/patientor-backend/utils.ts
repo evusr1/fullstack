@@ -64,14 +64,6 @@ const parseGender = (gender: unknown): Gender => {
     return gender;
 };
 
-const parseDiagnosisCodes = (object: unknown): Array<Diagnosis['code']> =>  {
-    if (!object || typeof object !== 'object' || !('diagnosisCodes' in object)) {
-      // we will just trust the data to be in correct form
-      return [] as Array<Diagnosis['code']>;
-    }
-  
-    return object.diagnosisCodes as Array<Diagnosis['code']>;
-};
 
 const parseType = (name: unknown): string => {
     if (!isString(name))
@@ -115,29 +107,45 @@ const parseHealthCheckRating = (healthCheckRating: unknown): HealthCheckRating =
     return healthCheckRating;
 };
 
-const parseDischargeEntry = (dischargeEntry: unknown): DischargeEntry => {
-    if (!dischargeEntry
-        || typeof dischargeEntry !== 'object'
-        || !isDischargeEntry(dischargeEntry)) 
-        throw new Error('Incorrect or missing dischargeEntry');
+const parseDischargeEntry = (object: unknown): DischargeEntry => {
+    if (!object
+        || typeof object !== 'object'
+        || !('discharge' in object)
+        || !object.discharge
+        || typeof object.discharge !== 'object'
+        || !isDischargeEntry(object.discharge)) 
+        throw new Error('Incorrect or missing discharge');
 
     return {
-        date: parseDate(dischargeEntry.date),
-        criteria: parseCriteria(dischargeEntry.criteria)
+        date: parseDate(object.discharge.date),
+        criteria: parseCriteria(object.discharge.criteria)
     };
 };
 
-const parseSickLeaveEntry = (sickLeave: unknown): SickLeaveEntry => {
-    if (!sickLeave
-        || typeof sickLeave !== 'object'
-        || !isSickLeaveEntry(sickLeave)) 
-        throw new Error('Incorrect or missing dischargeEntry');
+const parseSickLeaveEntry = (object: unknown): SickLeaveEntry | undefined=> {
+    if (!object|| typeof object !== 'object')
+        throw new Error('Incorrect or missing data');
+        
+    if(!('sickLeave' in object) || !object.sickLeave)
+        return undefined;
+
+    if(typeof object.sickLeave !== 'object' || !isSickLeaveEntry(object.sickLeave))
+        throw new Error('Incorrect or missing sick leave');
 
     return {
-        startDate: parseDate(sickLeave.startDate),
-        endDate: parseDate(sickLeave.endDate)
+        startDate: parseDate(object.sickLeave.startDate),
+        endDate: parseDate(object.sickLeave.endDate)
     };
 };
+
+const parseDiagnosisCodes = (object: unknown): Array<Diagnosis['code']> =>  {
+    if (!object || typeof object !== 'object' || !('diagnosisCodes' in object)) {
+      // we will just trust the data to be in correct form
+      return [] as Array<Diagnosis['code']>;
+    }
+  
+    return object.diagnosisCodes as Array<Diagnosis['code']>;
+  };
 
 export const toNewPatient = (object: unknown): PatientWithoutID => {
     if (!object || typeof object !== 'object') {
@@ -195,7 +203,7 @@ export const toNewEntry = (object: unknown): EntryWithoutId => {
                         date: parseDate(object.date),
                         specialist: parseSpecialist(object.specialist),
                         diagnosisCodes: parseDiagnosisCodes(object),
-                        discharge: parseDischargeEntry(object.discharge)
+                        discharge: parseDischargeEntry(object)
                     };
 
                     return newEntry;          
@@ -209,7 +217,7 @@ export const toNewEntry = (object: unknown): EntryWithoutId => {
                         date: parseDate(object.date),
                         specialist: parseSpecialist(object.specialist),
                         employerName: parseEmployeeName(object.employerName),
-                        sickLeave: ('sickLeave' in object) ? parseSickLeaveEntry(object.sickLeave) : undefined,
+                        sickLeave:  parseSickLeaveEntry(object),
                         diagnosisCodes: parseDiagnosisCodes(object),
                     };
 
